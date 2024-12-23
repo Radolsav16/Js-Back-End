@@ -3,7 +3,6 @@ const path = require('path');
 
 function readFile(filePath){
     const data = fs.readFileSync(filePath);
-
     return data.toString();
 }
 

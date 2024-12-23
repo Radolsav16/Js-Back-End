@@ -7,16 +7,21 @@ const { addCatHandler } = require('./handlers/addCat');
 const port = 3000;
 
 const router = {
-    '/':homeViewHandler,
-    '/index.html':homeViewHandler,
-    '/cats/add-breed':addBreedHandler,
-    '/cats/add-cat':addCatHandler,
+    'GET':{
+        '/':homeViewHandler,
+        '/index.html':homeViewHandler,
+        '/cats/add-breed':addBreedHandler,
+        '/cats/add-cat':addCatHandler,
+    }
+ 
 };
 
 const server = http.createServer((req,res)=>{
-    const rout = router[req.url]
+    const methodObj = router[req.method]
 
-    if(typeof(rout) === 'function'  && req.method === 'GET'){
+    const rout = methodObj[req.url];
+
+    if(typeof(rout) === 'function'){
         rout(req,res);
         return;
     } else if (staticResponceHandler(req,res)){
