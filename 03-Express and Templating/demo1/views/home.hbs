@@ -1,0 +1,10 @@
+<h1>Home Page</h1>
+<p>This is home Page</p>
+
+<ul>
+    {{#each contacts}}
+    <li>{{name}}: {{age}}</li>
+    {{else}}
+        <p>No users!!</p>
+    {{/each}}
+</ul>
