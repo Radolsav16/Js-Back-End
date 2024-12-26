@@ -1,4 +1,4 @@
-const { getAllData } = require("../service/movie");
+const { getAllData } = require("../service/service");
 
 module.exports = {
     homeController:async (req,res) => {

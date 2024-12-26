@@ -1,4 +1,4 @@
-const { getCurrent } = require("../service/movie")
+const { getCurrent } = require("../service/service")
 
 module.exports = {
     detailsController:async (req,res) => {

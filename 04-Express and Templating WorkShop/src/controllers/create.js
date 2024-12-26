@@ -1,4 +1,4 @@
-const { createFilmData } = require("../service/movie");
+const { createFilmData } = require("../service/service");
 
 module.exports = {
     createControllerGet:(req,res) => {
