@@ -1,57 +1,32 @@
 const express = require('express');
-const handlebars = require('express-handlebars');
-const mongoose = require('mongoose');
-const { User } = require('../models/User');
-require('../models/User');
+const { configDatabase } = require('../config/database');
+const { configHandleBars } = require('../config/handlebars');
+const { setMiddleWares } = require('../config/express');
+const { router } = require('../config/router');
+
 
 const port = 3000;
 const app = express();
 
-start();
 
 async function start(){
-
-
-
-const connectionStr = 'mongodb://localhost:27017/movie-magic';
-
-await mongoose.connect(connectionStr);
-
-console.log('Database Connected!')
-
-const hbs = handlebars.create({
-    extname:'.hbs'
-})
-
-app.set('view engine','.hbs');
-app.engine('.hbs',hbs.engine);
-
-
-app.use(express.urlencoded({extended:true}));
-
+    configDatabase();
+    configHandleBars(app);
+    setMiddleWares(app);
+    app.use(router);
+    app.listen(port);
 }
 
 
-app.get('/',(req,res)=>{
-    res.render('home');
-})
-
-app.post('/',async (req,res)=>{
-    const credentials = req.body;
-
-    const {username,password} = credentials;
-    
-    const user = new User({
-        username,
-        password
-    });
-
-    await user.save();
-
-    console.log(user)
-
-    res.redirect('/')
-})
+start();
 
 
-app.listen(port);
+
+
+
+
+
+
+
+
+
