@@ -1,4 +1,4 @@
-export default () => `<!DOCTYPE html>
+export default (breeds) => `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -22,19 +22,17 @@ export default () => `<!DOCTYPE html>
         <h1>Cat Shelter</h1>
     </header>
     <main>
-        <form method="post" class="cat-form" enctype="multipart/form-data">
+        <form method="post" class="cat-form"  >
             <h2>Add Cat</h2>
             <label for="name">Name</label>
-            <input name="name" type="text" id="name">
+            <input name="title" type="text" id="title">
             <label for="description">Description</label>
-            <textarea name="description" id="description"></textarea>
+            <textarea name="descritpion" id="descritpion"></textarea>
             <label for="image">Image</label>
-            <input name="upload" type="file" id="image">
+            <input name="imageUrl" type="text" id="image">
             <label for="group">Breed</label>
             <select name="breed" id="group">
-                <option value="Fluffy Cat">Fluffy Cat</option>
-				<option value="Fluffy Cat">Fluffy Cat</option>
-				<option value="Fluffy Cat">Fluffy Cat</option>
+            ${console.log(breeds)}
             </select>
             <button type="submit">Add Cat</button>
         </form>
