@@ -5,8 +5,13 @@ import addBreedHtml from '../views/addBreed.html.js';
 import addCatHtml from '../views/addCat.html.js';
 import siteCss from '../content/styles/site.css.js';
 import querystring from 'querystring'
+import editCatHtml from '../views/editCat.html.js';
+import { URLSearchParams } from 'url';
 
 let cats = [];
+let breeds = [];
+
+//Services
 
 async function getCats(){
     const data = await fs.readFile('./cats.json',{encoding:'utf8'});
@@ -16,7 +21,8 @@ async function getCats(){
 
 async function getBreeds() {
     const data = JSON.parse(await fs.readFile('./breed.json',{encoding:"utf-8"}));
-    return data.breeds;
+    breeds = [...data]
+    
 }
 
 async function addCat() {
@@ -24,14 +30,19 @@ async function addCat() {
     await fs.writeFile('./cats.json',catJson,{encoding:"utf-8"})
 }
 
-getCats();
+async function addBreed() {
+    const breedJson = JSON.stringify(breeds);
+    await fs.writeFile('./breed.json',breedJson,{encoding:"utf-8"})
+}
 
-const breeds = await getBreeds();
+
+getCats();
+getBreeds();
+
 
 const server = http.createServer((req,res) => {
     const url = req.url;
 
-    let breed = breeds;
     //Pages Configuration 
 
     if(url === '/' && req.method === 'GET'){
@@ -40,12 +51,25 @@ const server = http.createServer((req,res) => {
         res.end()
     }else if(url === '/cats/add-breed' && req.method === 'GET'){
         res.writeHead(200,{'Content-Type':'text/html'});
-        res.write(addBreedHtml(breed))
+        res.write(addBreedHtml())
         res.end()
     }else if(url === '/cats/add-cat' && req.method === 'GET'){
         res.writeHead(200,{'Content-Type':'text/html'});
-        res.write(addCatHtml())
+        res.write(addCatHtml(breeds))
         res.end()
+    }else if(url === '/cats/edit/1' && req.method === 'GET'){
+        const cat = cats.find(cat => cat.id === '1')
+        res.writeHead(200,{'content-type':'text/html'})
+        res.write(editCatHtml(breeds,cat));
+        res.end();
+    }else if(url === '/cats/edit/2' && req.method === 'GET'){
+        const cat = cats.find(cat => cat.id === '2')
+        res.writeHead(200,{'content-type':'text/html'})
+        res.write(editCatHtml(breeds,cat));
+    }else if(url === '/cats/edit/3' && req.method === 'GET'){
+        const cat = cats.find(cat => cat.id === '3')
+        res.writeHead(200,{'content-type':'text/html'})
+        res.write(editCatHtml(breeds,cat));
     }
     
 
@@ -69,7 +93,7 @@ const server = http.createServer((req,res) => {
 
         req.on('end',()=>{
             const data = new URLSearchParams(body);
-
+            
             const cat = Object.fromEntries(data.entries());
 
             cats.push(cat);
@@ -88,6 +112,56 @@ const server = http.createServer((req,res) => {
 
     }
 
+    if(url === '/cats/add-breed' && req.method === 'POST'){
+        let body = '';
+
+        req.on('data',chunk => {
+            body += chunk.toString()
+        })
+
+    
+
+        req.on('end',()=>{
+            const result = Object.fromEntries(new URLSearchParams(body).entries());
+            const breed = result.breed;
+            breeds.push(breed);
+            addBreed()
+            
+        })
+
+        res.writeHead(302,{
+            'location':'/'
+        })
+
+        res.end();
+    }
+
+    if(url === '/cats/edit/1' && req.method === 'POST'){
+        let body = '';
+
+        req.on('data',chunk => {
+            body += chunk.toString()
+        })
+
+        req.on('end',()=> {
+            const catIndex = cats.findIndex(cat => cat.id === '1');
+            const data = new URLSearchParams(body);
+            const cat  = Object.fromEntries(data.entries());
+            cats.splice(catIndex,1,{
+                id:'1',
+                ...cat
+            });
+            addCat()
+            
+        })
+
+        
+        res.writeHead(302,{
+            'location':'/'
+        })
+
+        res.end()
+    }
     
 
     
