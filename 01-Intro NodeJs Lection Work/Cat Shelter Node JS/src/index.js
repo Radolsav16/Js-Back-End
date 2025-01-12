@@ -7,6 +7,7 @@ import siteCss from '../content/styles/site.css.js';
 import querystring from 'querystring'
 import editCatHtml from '../views/editCat.html.js';
 import { URLSearchParams } from 'url';
+import catShelterHtml from '../views/catShelter.html.js';
 
 let cats = [];
 let breeds = [];
@@ -41,41 +42,52 @@ getBreeds();
 
 
 const server = http.createServer((req,res) => {
-    const url = req.url;
+  
+
+    const {url,method} = req;
+
+    const shelterRegex = /^\/cats\/shelter\/([^\/]+)$/;
+    const editRegex = /^\/cats\/edit\/([^\/]+)$/;
+
+    const shelterMatch = shelterRegex.test(url);
+    const editMatch = editRegex.test(url);
+
+   
+
 
     //Pages Configuration 
 
-    if(url === '/' && req.method === 'GET'){
+    if(url === '/' && method === 'GET'){
         res.writeHead(200,{'Content-Type':'text/html'});
         res.write(homeHtml(cats))
         res.end()
-    }else if(url === '/cats/add-breed' && req.method === 'GET'){
+    }else if(url === '/cats/add-breed' && method === 'GET'){
         res.writeHead(200,{'Content-Type':'text/html'});
         res.write(addBreedHtml())
         res.end()
-    }else if(url === '/cats/add-cat' && req.method === 'GET'){
+    }else if(url === '/cats/add-cat' && method === 'GET'){
         res.writeHead(200,{'Content-Type':'text/html'});
         res.write(addCatHtml(breeds))
         res.end()
-    }else if(url === '/cats/edit/1' && req.method === 'GET'){
-        const cat = cats.find(cat => cat.id === '1')
+    }else if(editMatch && method === 'GET'){
+        const id = url.split('/').pop();
+        const cat = cats.find(cat => cat.id ===  id)
         res.writeHead(200,{'content-type':'text/html'})
         res.write(editCatHtml(breeds,cat));
-        res.end();
-    }else if(url === '/cats/edit/2' && req.method === 'GET'){
-        const cat = cats.find(cat => cat.id === '2')
+        res.end()
+    }else if(shelterMatch && method === 'GET'){
+        const id = url.split('/').pop();
+        const cat = cats.find(cat => cat.id ===  id)
         res.writeHead(200,{'content-type':'text/html'})
-        res.write(editCatHtml(breeds,cat));
-    }else if(url === '/cats/edit/3' && req.method === 'GET'){
-        const cat = cats.find(cat => cat.id === '3')
-        res.writeHead(200,{'content-type':'text/html'})
-        res.write(editCatHtml(breeds,cat));
+        res.write(catShelterHtml(cat));
+        res.end()
     }
+
     
 
     //Static
 
-    if(url === '/content/styles/site.css' && req.method === 'GET'){
+    if(url === '/content/styles/site.css' && method === 'GET'){
         res.writeHead(200,{'Content-Type':'text/css'});
         res.write(siteCss)
         res.end()
@@ -84,7 +96,7 @@ const server = http.createServer((req,res) => {
 
     //POST
 
-    if(url === '/cats/add-cat' && req.method === 'POST'){
+    if(url === '/cats/add-cat' && method === 'POST'){
         let body = '';
         
         req.on('data',chunk => {
@@ -112,7 +124,7 @@ const server = http.createServer((req,res) => {
 
     }
 
-    if(url === '/cats/add-breed' && req.method === 'POST'){
+    if(url === '/cats/add-breed' && method === 'POST'){
         let body = '';
 
         req.on('data',chunk => {
@@ -136,19 +148,21 @@ const server = http.createServer((req,res) => {
         res.end();
     }
 
-    if(url === '/cats/edit/1' && req.method === 'POST'){
+    if(editMatch && method === 'POST'){
         let body = '';
+        
+        const id = url.split('/').pop()
 
         req.on('data',chunk => {
             body += chunk.toString()
         })
 
         req.on('end',()=> {
-            const catIndex = cats.findIndex(cat => cat.id === '1');
+            const catIndex = cats.findIndex(cat => cat.id === id);
             const data = new URLSearchParams(body);
             const cat  = Object.fromEntries(data.entries());
             cats.splice(catIndex,1,{
-                id:'1',
+                id,
                 ...cat
             });
             addCat()
@@ -162,10 +176,46 @@ const server = http.createServer((req,res) => {
 
         res.end()
     }
-    
 
+    if(shelterMatch && method === 'POST'){
+        const id = url.split('/').pop();
+        const catIndex = cats.findIndex(cat => cat.id === id);
+
+        cats.splice(catIndex,1);
+
+        addCat();
+
+        res.writeHead(302,{
+            'location':'/'
+        })
+
+        res.end();
+    }
+    
+    if(url === '/' && method === 'POST'){
+        let body = '';
+        req.on('data',chunk => {
+            body += chunk.toString();
+        })
+
+        req.on('end',()=>{
+              const searched = Object.fromEntries(new URLSearchParams(body).entries());
+              const text = searched.text;
+              
+            const filtered = cats.filter(cat => cat.title.includes(text));
+            console.log(filtered)
+            
+        res.writeHead(200,{'Content-Type':'text/html'});
+        res.write(homeHtml(filtered))
+        res.end()
+             
+        })
+
+        
+    }
     
 })
+
 
 server.listen(5050);
 

@@ -21,9 +21,9 @@ export default (cats) => `<!DOCTYPE html>
             </ul>
         </nav>
         <h1>Cat Shelter</h1>
-        <form action="/search">
-            <input type="text">
-            <button type="button">Search</button>
+        <form method="POST">
+            <input type="text" name="text">
+            <input type="submit"  placeholder ="Search" class="form button"/>
         </form>
     </header>
 
@@ -37,7 +37,7 @@ export default (cats) => `<!DOCTYPE html>
                     <p><span>Description: </span>${cat.descritpion}</p>
                     <ul class="buttons">
                         <li class="btn edit"><a href="/cats/edit/${cat.id}">Change Info</a></li>
-                        <li class="btn delete"><a href="">New Home</a></li>
+                        <li class="btn delete"><a href="/cats/shelter/${cat.id}">New Home</a></li>
                     </ul>
                 </li>`).join('')}
                
