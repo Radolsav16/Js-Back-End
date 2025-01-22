@@ -12,7 +12,7 @@ router.get('/',Home);
 router.get('/about',About);
 router.get('/create',create);
 router.post('/create',createPost)
-router.get('/details/:id',details);
+router.get('/movies/:id/details',details);
 router.get('/search',search)
 
 router.get('*',error)
