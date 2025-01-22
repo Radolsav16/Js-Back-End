@@ -1,9 +1,31 @@
 import fs from 'fs/promises'
 
-async function getMovies(){
-    const data = await fs.readFile('./configs/database.json',{encoding:'utf-8'});
+async function getMovies(filter){
+    const data = JSON.parse(await fs.readFile('./configs/database.json',{encoding:'utf-8'}));
+    let result = data;
 
-    return JSON.parse(data);
+ 
+    if(typeof(filter) === 'undefined'){
+        return result;
+    }
+
+    if(filter.title){
+        result = result.filter(movie => movie.title.toLowerCase() === filter.title.toLowerCase());
+    }
+
+    
+   
+    if(filter.genre){
+        result = result.filter(movie => movie.genre.toLowerCase() === filter.genre.toLowerCase());
+    }
+
+    
+    if(filter.year){
+        result = result.filter(movie => movie.year === filter.year);
+    }
+
+
+    return result;
 }
 
 async function getMovie(id) {
