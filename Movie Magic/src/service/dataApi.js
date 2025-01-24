@@ -1,7 +1,10 @@
 import fs from 'fs/promises'
+import Movie from '../../models/Movie.js';
 
 async function getMovies(filter){
-    const data = JSON.parse(await fs.readFile('./configs/database.json',{encoding:'utf-8'}));
+    // const data = JSON.parse(await fs.readFile('./configs/database.json',{encoding:'utf-8'}));
+    const data = await Movie.find({}).lean();
+
     let result = data;
 
  
@@ -29,9 +32,7 @@ async function getMovies(filter){
 }
 
 async function getMovie(id) {
-    const data = await getMovies();
-
-    const movie = data.find(movie => movie.id === id);
+    const movie =  await Movie.findById(id).lean();
 
     return movie;
 }
