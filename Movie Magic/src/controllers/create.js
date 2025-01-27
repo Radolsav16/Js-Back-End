@@ -1,28 +1,25 @@
+import Movie from "../../models/Movie.js";
 import { databaseApi } from "../service/dataApi.js";
 
 export function create(req,res){
     res.render('create');
 }
 
-export function createPost(req,res){
-    let body = '';
+export async function createPost(req,res){
+    console.log('Post request on create')
 
-    req.on('data',chunk => {
-        body += chunk.toString();
-    })
+    const movie = new Movie(req.body);
+    try{
+    await  movie.save()
+    res.redirect('/');
+    }catch(err){
+        console.log(err.message);
+    }
 
-    req.on('end',()=>{
-        const data = new URLSearchParams(body);
-        const obj = Object.fromEntries(data.entries());
-        console.log(obj)
-        databaseApi.createMovie(obj);
-    })
 
-    res.writeHead(302,{
-        'location':'/'
-    })
 
-    res.end()
+    
 
+    return movie;
 }
 
