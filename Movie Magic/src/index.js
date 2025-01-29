@@ -1,4 +1,4 @@
-import express, { urlencoded } from 'express';
+import express from 'express';
 import hbsConfig from '../configs/handebars.js';
 import staticConfig from '../configs/static.js';
 import router from '../configs/router.js';
