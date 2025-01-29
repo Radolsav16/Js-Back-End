@@ -6,7 +6,6 @@ export function create(req,res){
 }
 
 export async function createPost(req,res){
-    console.log('Post request on create')
 
     const movie = new Movie(req.body);
     try{

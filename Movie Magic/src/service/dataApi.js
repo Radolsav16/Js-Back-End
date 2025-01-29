@@ -1,8 +1,7 @@
-import fs from 'fs/promises'
 import Movie from '../../models/Movie.js';
+import Cast from '../../models/Cast.js';
 
 async function getMovies(filter){
-    // const data = JSON.parse(await fs.readFile('./configs/database.json',{encoding:'utf-8'}));
     const data = await Movie.find({}).lean();
 
     let result = data;
@@ -37,16 +36,27 @@ async function getMovie(id) {
     return movie;
 }
 
+async function getMoviewithCast(id) {
+    const movie =  await Movie.findById(id).populate('casts').lean();
 
-async function createMovie(movie) {
-    const movies = await getMovies();
-    movies.push(movie);
-    await fs.writeFile('./configs/database.json',JSON.stringify(movies));
+    return movie;
+}
+
+async function atttachCast(movieId,castId) {
+    const movie = await Movie.findById(movieId);
+    movie.casts.push(castId);
+    await movie.save();
+}
+
+async function getCasts() {
+    const data = await Cast.find({}).lean();
+    return data;
 }
 
 export const databaseApi = {
     getMovies,
     getMovie,
-    createMovie
-
+    getCasts,
+    atttachCast,
+    getMoviewithCast
 }
