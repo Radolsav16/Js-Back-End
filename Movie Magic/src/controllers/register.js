@@ -1,5 +1,8 @@
 import bcrpyt from 'bcrypt'
 import { register } from '../service/auth.js';
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 
 function getRegister (req,res){
@@ -13,21 +16,18 @@ async function postRegister(req,res){
         return;
     }
 
-    const salt = await bcrpyt.genSalt(10);
-    const hashPassword = await bcrpyt.hash(password,salt);
+    if(email === '' || password === '' ||  repeatPassword === ''){
+        return;
+    }
+
 
     
 
-    const data = {
-        email,
-        password:hashPassword
-    };
-
 
     try{
-        const user = await register(data);
-        console.log(user);
-        res.redirect('/')
+       const user =  await register({email,password});
+       res.cookie('auth',{id:user._id,email:user.email});
+       res.redirect('/')
     }catch(err){
         console.log(err.message)
     }
