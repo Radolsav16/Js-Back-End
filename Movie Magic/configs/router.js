@@ -7,7 +7,8 @@ import details from '../src/controllers/details.js';
 import { search } from '../src/controllers/search.js';
 import  { createCastPost,createCastGet } from '../src/controllers/createCast.js';
 import { attachCastGet , attachCastPOST } from '../src/controllers/castAttach.js';
-
+import { getLogin , postLogin } from '../src/controllers/login.js';
+import { getRegister , postRegister } from '../src/controllers/register.js';
 
 const router = express.Router();
 
@@ -21,6 +22,12 @@ router.get('/create-cast',createCastGet);
 router.post('/create-cast',createCastPost);
 router.get('/cast-attach/:id',attachCastGet);
 router.post('/cast-attach/:id',attachCastPOST);
+router.get('/login',getLogin);
+router.get('/register',getRegister);
+
+router.post('/login',postLogin);
+router.post('/register',postRegister);
+
 
 router.get('*',error)
 
