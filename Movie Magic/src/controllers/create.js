@@ -6,7 +6,8 @@ export function create(req,res){
 }
 
 export async function createPost(req,res){
-
+    const userId = req.user.id;
+    req.body.owner = userId;
     const movie = new Movie(req.body);
     try{
     await  movie.save()

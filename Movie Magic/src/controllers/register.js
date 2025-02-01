@@ -26,7 +26,7 @@ async function postRegister(req,res){
 
     try{
        const user =  await register({email,password});
-       res.cookie('auth',{id:user._id,email:user.email});
+    //    res.cookie('auth',{id:user._id,email:user.email});
        res.redirect('/')
     }catch(err){
         console.log(err.message)

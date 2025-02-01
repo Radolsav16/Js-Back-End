@@ -9,6 +9,7 @@ const movieShema = new Schema({
     imageURL:String,
     rating:Number,
     description:String,
+    owner:Types.ObjectId,
     casts:[
         {
             type:Types.ObjectId,

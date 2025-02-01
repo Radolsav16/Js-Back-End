@@ -9,6 +9,8 @@ import  { createCastPost,createCastGet } from '../src/controllers/createCast.js'
 import { attachCastGet , attachCastPOST } from '../src/controllers/castAttach.js';
 import { getLogin , postLogin } from '../src/controllers/login.js';
 import { getRegister , postRegister } from '../src/controllers/register.js';
+import { getEdit, postEdit } from '../src/controllers/edit.js';
+import { deleteMovie } from '../src/controllers/delete.js';
 
 const router = express.Router();
 
@@ -28,6 +30,9 @@ router.get('/register',getRegister);
 router.post('/login',postLogin);
 router.post('/register',postRegister);
 
+router.get('/movie/:id/edit',getEdit);
+router.post('/movie/:id/edit',postEdit);
+router.get('/movie/:id/delete',deleteMovie)
 
 router.get('*',error)
 
