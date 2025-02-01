@@ -53,10 +53,28 @@ async function getCasts() {
     return data;
 }
 
+async function editMovie(id,data) {
+    try{
+    await Movie.findByIdAndUpdate(id,data);
+    }catch(err){
+        console.log(err.message)
+    }
+}
+
+async function deletemovie(id) {
+    try{
+        await Movie.findByIdAndDelete(id);
+    }catch(err){
+        console.log(err.message);
+    }
+}
+
 export const databaseApi = {
     getMovies,
     getMovie,
     getCasts,
     atttachCast,
-    getMoviewithCast
+    getMoviewithCast,
+    editMovie,
+    deletemovie
 }

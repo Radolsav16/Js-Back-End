@@ -20,8 +20,16 @@
 
         <p class="disc">Description: {{data.description}}</p>
         <p class="card-category">Category: {{data.category}}</p>
-        <a href="/cast-attach/{{data._id}}" class="details">Attach Cast</a>
+        
+       {{#if isUser}}
 
+              <div class="details-btn">
+                <a href="/cast-attach/{{data._id}}" class="details">Attach Cast</a>
+                            <a id="edit-button" href="/movie/{{data._id}}/edit">Edit</a>
+                            <a id="delete-button" href="/movie/{{data._id}}/delete">Delete</a>
+               </div>
+
+         {{/if}}      
       </div>
     </div>
     <div class="card_right">
