@@ -24,7 +24,6 @@ export async function register({username,email,password,confirmPassword,}){
 
 export async function login({username,password}) {
     const user = await User.findOne({username}).lean();
-
     if(!user){
         throw Error('User with this email doesnt exist!');
     }
