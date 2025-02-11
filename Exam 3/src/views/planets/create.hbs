@@ -1,8 +1,10 @@
 
     <main>
+        {{#if error}}
         <div class="error-containers">
-            <p>Error</p>
+            <p>{{error}}</p>
         </div>
+        {{/if}}
 
         <form  method="POST" class="planet-form">
             <label for="name">Name of Planet:</label>
