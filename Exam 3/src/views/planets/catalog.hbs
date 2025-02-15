@@ -1,0 +1,11 @@
+<main>
+        <div class="planet-card" id="planet1">
+            {{#if planets}}
+            {{#each planets}}
+          {{> planetCard}}
+          {{/each}}
+          {{else}}
+          <p class="no-post">There are no planets found yet!</p>
+          {{/if}}
+        </div>
+    </main>
