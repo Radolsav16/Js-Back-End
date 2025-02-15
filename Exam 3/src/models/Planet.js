@@ -33,7 +33,7 @@ const planetSchema = new Schema({
         required:[true,'Size is required!']
     },
     rings:{
-        type:Number,
+        type:String,
         enum:['Yes','No'],
         required:[true,'Choose rings please!']
     },
@@ -47,7 +47,9 @@ const planetSchema = new Schema({
         type:String,
         match:/^https?:\/\//gm,
         required:[true,'Image is is required!']
-    }
+    },
+    likedList:[{type:Types.ObjectId,ref:'User'}],
+    owner:[{type:Types.ObjectId,ref:'User'}]
 
 })
 
